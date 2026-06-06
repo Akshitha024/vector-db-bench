@@ -1,0 +1,62 @@
+[project]
+name = "vector-db-bench"
+version = "0.4.0"
+description = "Production-grade FAISS-vs-Chroma-vs-flat brute-force vector-DB benchmark at 100k-corpus / 10k-query scale: recall@k, latency p50/p99, QPS, index build time, peak RSS"
+requires-python = ">=3.11"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Akshitha Reddy Lingampally" }]
+dependencies = [
+    "numpy>=1.26",
+    "faiss-cpu>=1.7.4",
+    "chromadb>=0.5.0",
+    "scikit-learn>=1.3",
+    "matplotlib>=3.8",
+    "typer>=0.9",
+    "rich>=13.7",
+    "pydantic>=2.5",
+    "psutil>=5.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "pytest-xdist>=3.5",
+    "ruff>=0.4",
+    "mypy>=1.8",
+    "hypothesis>=6.99",
+    "types-psutil",
+]
+
+[project.scripts]
+vdb = "vdb.cli.main:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/vdb"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF", "TID", "PT"]
+ignore = ["B008"]
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+plugins = ["pydantic.mypy"]
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-markers"
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: requires faiss + chromadb installed",
+    "benchmark: produces benchmark numbers",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

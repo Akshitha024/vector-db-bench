@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+title: vector-db-bench
+message: "Production-grade vector-DB benchmark at 100k-corpus / 10k-query scale."
+authors:
+  - family-names: "Lingampally"
+    given-names: "Akshitha Reddy"
+date-released: "2024-05-12"
+version: "0.4.0"
+license: "MIT"
+url: "https://github.com/Akshitha024/vector-db-bench"
+keywords:
+  - "vector-search"
+  - "faiss"
+  - "chroma"
+  - "ann"
+  - "rag-infrastructure"

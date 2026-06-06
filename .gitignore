@@ -1,0 +1,28 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+
+# benchmark artifacts
+/runs/
+/data/raw/
+/data/embeddings/
+*.npy
+*.faiss
+.chromadb/
+chroma_data/
+
+.idea/
+.vscode/
+*.swp
+.DS_Store
+
+# always track the rendered report PDF
+!docs/research_report.pdf

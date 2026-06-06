@@ -1,0 +1,37 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.3, pytest-9.0.3, pluggy-1.6.0
+rootdir: /Users/mani/Projects/akshitha-portfolio/projects/vector-db-bench
+configfile: pyproject.toml
+testpaths: tests
+plugins: hypothesis-6.155.2, cov-7.1.0, xdist-3.8.0, anyio-4.13.0
+collected 22 items / 1 deselected / 21 selected
+
+tests/test_backends_faiss.py ...                                         [ 14%]
+tests/test_backends_numpy.py ..                                          [ 23%]
+tests/test_metrics.py ....                                               [ 42%]
+tests/test_synth.py ............                                         [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform darwin, python 3.13.3-final-0 _______________
+
+Name                           Stmts   Miss  Cover
+--------------------------------------------------
+src/vdb/__init__.py                1      0   100%
+src/vdb/bench/__init__.py          0      0   100%
+src/vdb/bench/sweep.py            37     28    24%
+src/vdb/cli/__init__.py            0      0   100%
+src/vdb/cli/main.py               30     30     0%
+src/vdb/corpus/__init__.py         0      0   100%
+src/vdb/corpus/synthesize.py      38      0   100%
+src/vdb/index/__init__.py          0      0   100%
+src/vdb/index/backends.py        137     36    74%
+src/vdb/metrics/__init__.py        0      0   100%
+src/vdb/metrics/score.py          33     16    52%
+src/vdb/reports/__init__.py        0      0   100%
+src/vdb/runner.py                 24     17    29%
+src/vdb/types.py                  42      0   100%
+src/vdb/viz/__init__.py            0      0   100%
+src/vdb/viz/charts.py             96     83    14%
+--------------------------------------------------
+TOTAL                            438    210    52%
+======================= 21 passed, 1 deselected in 0.63s =======================

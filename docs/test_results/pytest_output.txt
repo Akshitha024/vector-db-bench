@@ -1,0 +1,33 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.13.3, pytest-9.0.3, pluggy-1.6.0 -- /Users/mani/Projects/akshitha-portfolio/projects/vector-db-bench/.venv/bin/python3
+cachedir: .pytest_cache
+hypothesis profile 'default'
+rootdir: /Users/mani/Projects/akshitha-portfolio/projects/vector-db-bench
+configfile: pyproject.toml
+testpaths: tests
+plugins: hypothesis-6.155.2, cov-7.1.0, xdist-3.8.0, anyio-4.13.0
+collecting ... collected 22 items / 1 deselected / 21 selected
+
+tests/test_backends_faiss.py::test_faiss_flat_matches_brute_force PASSED [  4%]
+tests/test_backends_faiss.py::test_faiss_hnsw_high_recall PASSED         [  9%]
+tests/test_backends_faiss.py::test_faiss_ivf_pq_runs PASSED              [ 14%]
+tests/test_backends_numpy.py::test_flat_numpy_search_returns_sorted_scores PASSED [ 19%]
+tests/test_backends_numpy.py::test_flat_numpy_matches_argpartition_ground_truth PASSED [ 23%]
+tests/test_metrics.py::test_recall_perfect_match PASSED                  [ 28%]
+tests/test_metrics.py::test_recall_zero_when_disjoint PASSED             [ 33%]
+tests/test_metrics.py::test_recall_partial PASSED                        [ 38%]
+tests/test_metrics.py::test_recall_with_k_smaller_than_gold PASSED       [ 42%]
+tests/test_synth.py::test_synthesize_deterministic[11] PASSED            [ 47%]
+tests/test_synth.py::test_synthesize_deterministic[13] PASSED            [ 52%]
+tests/test_synth.py::test_synthesize_deterministic[17] PASSED            [ 57%]
+tests/test_synth.py::test_synthesize_deterministic[23] PASSED            [ 61%]
+tests/test_synth.py::test_synthesize_deterministic[29] PASSED            [ 66%]
+tests/test_synth.py::test_synthesize_norms PASSED                        [ 71%]
+tests/test_synth.py::test_synthesize_gold_shape PASSED                   [ 76%]
+tests/test_synth.py::test_synthesize_at_10k_runs_fast PASSED             [ 80%]
+tests/test_synth.py::test_query_coverage_parameter[0.5] PASSED           [ 85%]
+tests/test_synth.py::test_query_coverage_parameter[0.8] PASSED           [ 90%]
+tests/test_synth.py::test_query_coverage_parameter[0.95] PASSED          [ 95%]
+tests/test_synth.py::test_query_coverage_parameter[1.0] PASSED           [100%]
+
+======================= 21 passed, 1 deselected in 0.54s =======================

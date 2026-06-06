@@ -1,0 +1,31 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+      - name: Set up Python
+        run: uv python install 3.11
+      - name: Install deps
+        run: uv sync --extra dev
+      - name: Lint
+        run: |
+          uv run ruff check src tests
+          uv run ruff format --check src tests
+      - name: Typecheck
+        run: uv run mypy src
+      - name: Unit + integration tests
+        run: uv run pytest -v -m "not slow"
+      - name: Fast benchmark smoke
+        run: |
+          uv run vdb bench --out-dir runs/ci \
+            --n-docs 5000 --n-queries 500 --dim 64 \
+            --backends faiss_flat,faiss_hnsw --ks 10
