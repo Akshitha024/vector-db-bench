@@ -34,6 +34,35 @@ Pick the wrong index and you quietly turn a **30 ms** response into a **300 ms**
 
 You're building a retrieval pipeline behind a RAG product. Your budget is **50 ms p99** for the retrieval step and a **95% recall floor** against the gold top-10. Your corpus will land around **100k documents**. You need to know — *before you ship* — which index actually meets those numbers.
 
+## 🗺️ What's inside (at a glance)
+
+```mermaid
+mindmap
+  root((vector-db-bench))
+    Backends
+      FAISS Flat
+      FAISS HNSW
+      FAISS IVF-PQ
+      Chroma
+    Workload
+      100k docs
+      10k queries
+      dim 128
+      coverage 0.95
+    Metrics
+      Recall@k
+      QPS
+      p50 p95 p99
+      Build seconds
+      Peak RSS
+    Reproducibility
+      Seeded GMM corpus
+      Deterministic gold
+      Mypy strict
+      Ruff clean
+      CI smoke at 5k by 500
+```
+
 ## 📏 What it measures
 
 For every candidate index, the benchmark reports five things that actually matter in production:
@@ -143,14 +172,38 @@ docs/research_report.pdf # 15-page deep-dive report
 results/figures/         # rendered charts
 ```
 
-## 🧭 How it fits together
+## 🏗️ Architecture
 
 ```mermaid
 flowchart LR
-    A["📥 Seeded corpus<br/>+ gold answers"] --> B["⚙️ Build each index<br/>Flat / HNSW / IVF-PQ"]
-    B --> C["🔍 Run 9,847 queries<br/>measure recall + latency"]
-    C --> D["📊 6 charts<br/>+ summary.json"]
-    C --> E["📄 15-page PDF report"]
+    classDef io fill:#16A085,stroke:#1c1c1c,stroke-width:1.5px,color:#fff
+    classDef proc fill:#2C3E50,stroke:#1c1c1c,stroke-width:1.5px,color:#fff
+    classDef out fill:#E74C3C,stroke:#1c1c1c,stroke-width:1.5px,color:#fff
+    A["📥 Seeded corpus<br/>+ gold answers"]:::io --> B["⚙️ Build each index<br/>Flat / HNSW / IVF-PQ"]:::proc
+    B --> C["🔍 Run 9,847 queries<br/>measure recall + latency"]:::proc
+    C --> D["📊 6 charts<br/>+ summary.json"]:::out
+    C --> E["📄 15-page PDF report"]:::out
+```
+
+## 🔄 Pipeline sequence
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as User / CI
+    participant M as Makefile
+    participant R as Runner
+    participant V as Viz
+    participant P as PDF
+    U->>M: make bench
+    M->>R: invoke runner with seeded config
+    R-->>R: load fixture + execute task
+    R->>V: emit per-(metric, slice) records
+    V-->>V: render chart families
+    V->>U: write summary.json + PNG artifacts
+    U->>M: make pdf
+    M->>P: pandoc + xelatex
+    P->>U: docs/research_report.pdf
 ```
 
 ## 📚 Documentation & references
