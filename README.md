@@ -194,7 +194,13 @@ CITATION.cff, LICENSE, Makefile, .github/workflows/ci.yml
 
 ## License
 
-MIT.
+MIT.### Result charts (6 distinct families, palette: *ANN Index*)
+
+<table>
+  <tr><td align="center"><strong>Build Vs Recall</strong><br/><img src="./results/figures/build_vs_recall.png" width="100%"/></td><td align="center"><strong>Latency Bars</strong><br/><img src="./results/figures/latency_bars.png" width="100%"/></td></tr>
+  <tr><td align="center"><strong>Latency Box</strong><br/><img src="./results/figures/latency_box.png" width="100%"/></td><td align="center"><strong>Memory</strong><br/><img src="./results/figures/memory.png" width="100%"/></td></tr>
+  <tr><td align="center"><strong>Recall Curve</strong><br/><img src="./results/figures/recall_curve.png" width="100%"/></td><td align="center"><strong>Recall Vs Qps</strong><br/><img src="./results/figures/recall_vs_qps.png" width="100%"/></td></tr>
+</table>
 
 
 ## Architecture

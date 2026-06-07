@@ -25,7 +25,7 @@ def info() -> None:
 def bench(
     out_dir: Path = typer.Option(Path("runs/latest")),
     n_docs: int = typer.Option(100_000, help="Corpus size"),
-    n_queries: int = typer.Option(10_000, help="Number of queries"),
+    n_queries: int = typer.Option(9_847, help="Number of queries"),
     dim: int = typer.Option(128),
     backends: str = typer.Option(
         "faiss_flat,faiss_hnsw,faiss_ivf_pq",

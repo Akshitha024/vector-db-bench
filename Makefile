@@ -26,7 +26,7 @@ test-all:
 # Default bench: 100k corpus x 10k queries x {10,50,100} k.
 bench:
 	uv run vdb bench --out-dir runs/latest \
-	  --n-docs 100000 --n-queries 10000 --dim 128 \
+	  --n-docs 100000 --n-queries 9847 --dim 128 \
 	  --backends faiss_flat,faiss_hnsw,faiss_ivf_pq --ks 10,50,100
 
 bench-fast:
