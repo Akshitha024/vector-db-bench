@@ -31,7 +31,7 @@ You are wiring a new retrieval pipeline behind a RAG product. Latency budget is 
 4. **Index build time** (because rebuild cost matters operationally).
 5. **Peak RSS** (so you know whether the index fits in your serving box).
 
-## Headline results (real run: 100,000 docs × 10,000 queries × dim=128)
+## Headline results (real run: 100,000 docs × 9,847 queries × dim=128)
 
 | backend | k | recall@k | QPS | p50 ms | p99 ms | build s | peak RSS MB |
 |---|--:|--:|--:|--:|--:|--:|--:|
