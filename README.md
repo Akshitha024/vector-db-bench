@@ -11,19 +11,9 @@
   <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey?style=for-the-badge">
 </p>
 
-> **Production-grade vector-database benchmark: FAISS Flat / HNSW / IVF-PQ vs Chroma at 100k corpus and 10k queries with recall / QPS / latency / build / RSS.**
+> ****
 
 
-
-<p align="center">
-  <img alt="scale" src="https://img.shields.io/badge/scale-100k×10k-blueviolet?style=for-the-badge">
-  <img alt="recall" src="https://img.shields.io/badge/recall%40k-up%20to%201.000-2ecc71?style=for-the-badge">
-  <img alt="qps" src="https://img.shields.io/badge/peak%20qps-82.9k-ff6b6b?style=for-the-badge">
-  <img alt="mypy" src="https://img.shields.io/badge/mypy-strict-blue?style=for-the-badge">
-  <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey?style=for-the-badge">
-</p>
-
-> **Production-grade vector-database benchmark for RAG infrastructure.** 100,000-document corpus, 10,000 queries, three FAISS index variants plus a brute-force baseline. Measures recall@k against the brute-force ground truth, end-to-end QPS, per-query latency percentiles (p50/p95/p99), index build time, and peak resident memory. Decisions like "Flat or HNSW?", "is IVF-PQ worth the compression?", and "how do I tune `nprobe` for my recall floor?" are answerable directly from the headline table.
 
 ## The challenge
 
@@ -65,51 +55,7 @@ You are wiring a new retrieval pipeline behind a RAG product. Latency budget is 
 
 - **All three indexes fit comfortably in CPU memory** at this scale (~2.6 GB peak). The marginal RSS cost of HNSW over flat is ~65 MB; for IVF-PQ it is ~100 MB.
 - **Build time is dominated by HNSW graph construction** (1.55 s) and IVF training (2.3 s). The flat index is effectively free to build. For production teams that rebuild nightly, both are well within a build-job budget.
-- **Latency p50 vs p99 is tight** for HNSW (0.011 to 0.025 ms is less than 3x spread). This is one of the strongest practical reasons to prefer HNSW: the tail is well-behaved and predictable.
-
-## Architecture
-
-```mermaid
-flowchart LR
-    classDef io fill:#9C2C2C,stroke:#222,stroke-width:1.5px,color:#fff
-    classDef proc fill:#264653,stroke:#222,stroke-width:1.5px,color:#fff
-    classDef backend fill:#2A9D8F,stroke:#222,stroke-width:1.5px,color:#fff
-    classDef out fill:#E76F51,stroke:#222,stroke-width:1.5px,color:#fff
-    A["CorpusConfig + QuerySet"]:::io --> B["GMM synthesizer<br/>L2-normalized embeddings<br/>+ exact brute-force gold"]:::proc
-    B --> C["Backend matrix"]:::proc
-    C --> D1["FAISS Flat (IP)"]:::backend
-    C --> D2["FAISS HNSW (M, efC, efS)"]:::backend
-    C --> D3["FAISS IVF-PQ (nlist, nprobe, m)"]:::backend
-    C --> D4["Chroma (HNSW backend)"]:::backend
-    D1 & D2 & D3 & D4 --> E["benchmark_search<br/>batch latency capture"]:::proc
-    E --> F["RunResult + summary.json"]:::out
-    E --> G["6 chart families"]:::out
-```
-
-## Pipeline sequence
-
-```mermaid
-sequenceDiagram
-    autonumber
-    participant U as Operator
-    participant M as Makefile
-    participant S as Synthesizer
-    participant B as Backend
-    participant E as Bench loop
-    participant V as Charts
-    U->>M: make bench
-    M->>S: synthesize 100k corpus + 10k queries + gold
-    S-->>M: docs, queries, gold
-    M->>B: build(docs) for each backend
-    B-->>M: trained / indexed
-    M->>E: search(queries, k) in 64-batch increments
-    E-->>E: capture per-batch latency, peak RSS
-    E->>V: results list
-    V-->>M: 6 PNG charts written to results/figures/
-    M-->>U: runs/latest/summary.json
-```
-
-## Concept mindmap
+- **Latency p50 vs p99 is tight** for HNSW (0.011 to 0.025 ms is less than 3x spread). This is one of the strongest practical reasons to prefer HNSW: the tail is well-behaved and predictable.## Concept mindmap
 
 ```mermaid
 mindmap
@@ -249,4 +195,71 @@ CITATION.cff, LICENSE, Makefile, .github/workflows/ci.yml
 ## License
 
 MIT.
+
+
+## Architecture
+
+```mermaid
+flowchart LR
+    classDef io fill:#16A085,stroke:#1c1c1c,stroke-width:1.5px,color:#fff
+    classDef proc fill:#2C3E50,stroke:#1c1c1c,stroke-width:1.5px,color:#fff
+    classDef out fill:#E74C3C,stroke:#1c1c1c,stroke-width:1.5px,color:#fff
+    A["📥 Inputs<br/>fixtures + configs"]:::io --> B["⚙️ Core pipeline<br/>vector"]:::proc
+    B --> C["🧪 Evaluation<br/>5 chart families"]:::proc
+    C --> D["📊 Artifacts<br/>summary.json + PNGs"]:::out
+    C --> E["📄 PDF report<br/>15 pages"]:::out
+```
+
+## Pipeline sequence
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant U as User / CI
+    participant M as Makefile
+    participant R as Runner
+    participant V as Viz
+    participant P as PDF
+    U->>M: make bench
+    M->>R: invoke runner with seeded config
+    R-->>R: load fixture + execute task
+    R->>V: emit per-(metric, slice) records
+    V-->>V: render 5 distinct chart families
+    V->>U: write summary.json + PNG artifacts
+    U->>M: make pdf
+    M->>P: pandoc + xelatex
+    P->>U: docs/research_report.pdf
+```
+
+## Concept mindmap
+
+```mermaid
+mindmap
+  root((vector))
+    Inputs
+      Fixture
+      Seed
+      Config
+    Core
+      Modules
+      Tests
+      Mypy strict
+    Outputs
+      5 chart families
+      summary json
+      15-page PDF
+    Quality
+      Ruff
+      Coverage
+      CI on push
+```
+
+
+### Result charts (6 distinct families, palette: *ANN Index*)
+
+<table>
+  <tr><td align="center"><strong>Build Vs Recall</strong><br/><img src="./results/figures/build_vs_recall.png" width="100%"/></td><td align="center"><strong>Latency Bars</strong><br/><img src="./results/figures/latency_bars.png" width="100%"/></td></tr>
+  <tr><td align="center"><strong>Latency Box</strong><br/><img src="./results/figures/latency_box.png" width="100%"/></td><td align="center"><strong>Memory</strong><br/><img src="./results/figures/memory.png" width="100%"/></td></tr>
+  <tr><td align="center"><strong>Recall Curve</strong><br/><img src="./results/figures/recall_curve.png" width="100%"/></td><td align="center"><strong>Recall Vs Qps</strong><br/><img src="./results/figures/recall_vs_qps.png" width="100%"/></td></tr>
+</table>
 
